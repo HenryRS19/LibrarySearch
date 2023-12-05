@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de Libros de Google</title>
+    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        text-align: center;
+        background-image: url("fondo.jpg");
+    }
+
+    #main{
+        margin: 0 100px;
+        background-color: #fff;
+    }
+
+    h1 {
+        color: #333;
+    }
+
+    form {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    input {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 8px 12px;
+        font-size: 14px;
+        background-color: #a18262;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    #resultados {
+        text-align: left;
+    }
+
+    div {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    a {
+        color: #0066cc;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
+<body>
+
+    <div id="main">
+
+<h1>Buscador de Libros de Google</h1>
+
+<!-- Formulario -->
+<form id="formularioBusqueda">
+    <label for="terminoBusqueda">Término de Búsqueda:</label>
+    <input type="text" id="terminoBusqueda" required>
+    <button type="button" onclick="buscarLibros()">Buscar</button>
+</form>
+
+<!-- Resultados de la búsqueda -->
+<div id="resultados">
+
+</div>
+
+
+<script>
+    // Función para buscar libros en la API de Google Books
+    async function buscarLibros() {
+        const terminoBusqueda = document.getElementById('terminoBusqueda').value;
+
+        // URL de la API de Google Books para buscar libros
+        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(terminoBusqueda)}`;
+
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+
+            const resultadosDiv = document.getElementById('resultados');
+            resultadosDiv.innerHTML = ''; // Limpiar
+
+            if (data.items && data.items.length > 0) {
+                data.items.forEach(libro => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <h2>${libro.volumeInfo.title}</h2>
+                        <p>Autores: ${libro.volumeInfo.authors ? libro.volumeInfo.authors.join(', ') : 'Desconocido'}</p>
+                        <p>Editorial: ${libro.volumeInfo.publisher || 'Desconocido'}</p>
+                        <p><i class="fas fa-book-open"><a href="${libro.volumeInfo.previewLink}" target="_blank" >Vista Previa</a></i></p>
+                    `;
+                    resultadosDiv.appendChild(div);
+                });
+            } else {
+                resultadosDiv.innerHTML = '<p>No se encontraron resultados.</p>';
+            }
+        } catch (error) {
+            console.error('Error al buscar libros:', error);
+        }
+    }
+</script>
+
+</div>
+
+</body>
+</html>
+</script>
+
+</body>
+</html>
+
